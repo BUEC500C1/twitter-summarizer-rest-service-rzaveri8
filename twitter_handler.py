@@ -12,32 +12,43 @@ import globals
 import math
 from PIL import Image
 from PIL import ImageDraw
+from keys import *
 from image_handler import tweet_video,make_dir
 from video_handler import image2vid,make_dir_video
 import shutil
 import glob
 
 isKey = False
-if os.path.isfile(os.getcwd() + "/keys") == True:
-    iskey = True
+try:
     shutil.copy('keys', 'keys.py')
     from keys import *
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_secret)
-    api = tweepy.API(auth)
+except:
+    isKey = True    
+
+
 
 
 def get_screen_name(screen_name):
     return screen_name
 
 def all_tweets_test(screen_name):
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+    api = tweepy.API(auth)
+
     try:
         new_tweets = api.user_timeline(screen_name = screen_name,count=200, tweet_mode = "extended")
     except:
+        print(new_tweets)
         return 0
     return new_tweets
 
 def all_tweets():
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+    api = tweepy.API(auth)
+    #if not isKey:
+        #return "Can't Process Tweets"    
     while True:
         vid_req = globals.q.get()
         vid_id =  vid_req["id"]
